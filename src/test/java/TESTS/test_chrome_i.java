@@ -22,7 +22,7 @@ import PAGES.reg_pom;
 public class test_chrome_i extends excel_product {
 
 	
-WebDriver dr;
+    WebDriver dr;
 	
 	utilities ut; 
 	wait_type wt;
@@ -37,7 +37,7 @@ WebDriver dr;
 	String url="https://www.demoblaze.com/"; 
 	
 	@BeforeClass
-	public void bm() {
+	public void launch_browser() {
 		ut=new utilities();
 		dr=ut.launch_browser("CHROME", url); //launches the chrome browser
 		
@@ -45,7 +45,7 @@ WebDriver dr;
 	
 	
   @Test(dataProvider="project")
-  public void TC1(String s_uid,String s_pwd,String l_uid,String l_pwd,String el,String cn,String tm,String a) throws InterruptedException, IOException {
+  public void signup(String s_uid,String s_pwd,String l_uid,String l_pwd,String el,String cn,String tm,String a) throws InterruptedException, IOException {
 	  
 	  
 	  wt=new wait_type(dr);
@@ -60,7 +60,7 @@ WebDriver dr;
   
   
   @Test(dataProvider="project")
-  public void TC2(String s_uid,String s_pwd,String l_uid,String l_pwd,String el,String cn,String tm,String a) throws InterruptedException, IOException { 
+  public void login(String s_uid,String s_pwd,String l_uid,String l_pwd,String el,String cn,String tm,String a) throws InterruptedException, IOException { 
       rp.do_login(l_uid, l_pwd); //performs sign-in operations
 	  
 	  Thread.sleep(5000);
@@ -68,16 +68,15 @@ WebDriver dr;
 	  hp=new homepage(dr); 
 	  String act_usr= hp.read_name(); //reads the name of the user after successful login
 	  
-	 ut.screenshot(dr);
+  	  ut.screenshot(dr);
 	  
 	  Assert.assertTrue(act_usr.contains(a)); //checks if the username in homepage is same as the name in excel
   }
   
   @Test(dataProvider="project")
-  public void TC3(String s_uid,String s_pwd,String l_uid,String l_pwd,String el,String cn,String tm,String a) throws InterruptedException, IOException {
+  public void Addtocart(String s_uid,String s_pwd,String l_uid,String l_pwd,String el,String cn,String tm,String a) throws InterruptedException, IOException {
 	  
-      hp.add_product1(); //adds the first product(iphone 6 32GB)
-	  	  
+      hp.add_product1(); //adds the first product(iphone 6 32GB)	  	  
 	  Thread.sleep(3000);
 	  ap=new add_tocart(dr); 
 	  ap.set_cart(); 
@@ -88,18 +87,14 @@ WebDriver dr;
 	  hp.select_laptop();  // adds second product(macbook air)
 
 	  ap.set_cart();
-	  ap.add_alert(); 
-	  
+	  ap.add_alert(); 	  
 	  ap.goto_cart(); //traverse to final cart page
 	  
 	  cp=new checkout_page(dr);
-
 	  String total_price= cp.get_totalprice(); //reads the final total price
 	  System.out.println(total_price);
 	  Assert.assertTrue(total_price.contains("1490"));  //checks for the total price as 1490
-	  
-	
-		Thread.sleep(4000);
+	  Thread.sleep(4000);	
 
   }
 	 
@@ -110,11 +105,12 @@ WebDriver dr;
 	  return testdata;
   } 
   
+  
   @AfterClass
-  public void am()
+  public void close_browser()
   {
 	  
-	  dr.close();  //closes the browser
+	  dr.quit();  //closes the browser
 	  
   }
 }
